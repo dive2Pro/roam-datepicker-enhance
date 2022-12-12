@@ -1,0 +1,35 @@
+.bp3-datepicker-day-wrapper {
+  position: relative;
+}
+
+.due.bp3-datepicker-day-wrapper:after {
+  content: attr(data-size);
+  position: absolute;
+  bottom: -2px;
+  font-size: 8px;
+  background-color: #fa999c;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bp3-datepicker-day-wrapper.outline {
+  outline: solid #fbb360;
+  outline-style: solid;
+}
+
+.DayPicker-Day.DayPicker-Day--selected .outline {
+  outline-offset: 1px;
+}
+
+.bp3-dark .bp3-datepicker-day-wrapper:after {
+  background-color: #ac2f33;
+}
+
+.DayPicker-Day {
+  padding: 2px;
+}
