@@ -1,8 +1,53 @@
+:root {
+  --color-calendar-graph-day-L1-dbg: #0e4429;
+  --color-calendar-graph-day-L2-dbg: #006d32;
+  --color-calendar-graph-day-L3-dbg: #26a641;
+  --color-calendar-graph-day-L4-dbg: #39d353;
+}
+
+:root {
+  --color-calendar-graph-day-L1-bg: #9be9a8;
+  --color-calendar-graph-day-L2-bg: #40c463;
+  --color-calendar-graph-day-L3-bg: #30a14e;
+  --color-calendar-graph-day-L4-bg: #216e39;
+}
+
+.calendar-day {
+  border-radius: 50%;
+}
+
+.bp3-dark .calendar-day[data-level="1"] {
+  background-color: var(--color-calendar-graph-day-L1-dbg);
+}
+
+.calendar-day[data-level="1"] {
+  background-color: var(--color-calendar-graph-day-L1-bg);
+}
+
+.bp3-dark .calendar-day[data-level="2"] {
+  background-color: var(--color-calendar-graph-day-L2-dbg);
+}
+.bp3-dark .calendar-day[data-level="3"] {
+  background-color: var(--color-calendar-graph-day-L3-dbg);
+}
+.bp3-dark .calendar-day[data-level="4"] {
+  background-color: var(--color-calendar-graph-day-L4-dbg);
+}
+
+.calendar-day[data-level="2"] {
+  background-color: var(--color-calendar-graph-day-L2-bg);
+}
+.calendar-day[data-level="3"] {
+  background-color: var(--color-calendar-graph-day-L3-bg);
+}
+.calendar-day[data-level="4"] {
+  background-color: var(--color-calendar-graph-day-L4-bg);
+}
 .bp3-datepicker-day-wrapper {
   position: relative;
 }
 
-.due.bp3-datepicker-day-wrapper:after {
+.bp3-dark .due.bp3-datepicker-day-wrapper:after {
   content: attr(data-size);
   position: absolute;
   bottom: -2px;

@@ -7,38 +7,6 @@ import { PullBlock } from "roamjs-components/types";
 
 const delay = (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const COLORS1 = [
-  "#2F4858",
-  "#035263",
-  "#005D65",
-  "#00665A",
-  "#006E44",
-  "#1D7324",
-];
-const COLORS = ["#394b59", "#0e4429", "#006d32", "#26a641", "#39d353"];
-const COLORS2 = [
-  "#B1ECB5",
-  "#A9E5AD",
-  "#A2DFA5",
-  "#9AD89D",
-  "#93D295",
-  "#8BCB8D",
-  "#84C485",
-  "#7DBE7E",
-  "#75B876",
-  "#6EB16E",
-  "#66AB67",
-  "#5FA45F",
-  "#579E58",
-  "#509850",
-  "#489249",
-  "#408B42",
-  "#38853A",
-  "#307F33",
-  "#27792C",
-  "#1D7324",
-];
-
 const ancestorrule = `[ 
    [ (ancestor ?child ?parent) 
         [?parent :block/children ?child] ]
@@ -153,7 +121,7 @@ const onDateSelect = (el: HTMLElement) => {
         el.firstElementChild.setAttribute("data-size", count + "");
       }
       if (linkedMap[uid]) {
-        el.firstElementChild.classList.add('outline')
+        el.firstElementChild.classList.add("outline");
       }
       let style = linkedMap[uid]
         ? `
@@ -161,11 +129,11 @@ const onDateSelect = (el: HTMLElement) => {
         : "";
 
       if (blockCountMap[uid] > 0) {
-        style = `${style}
-         background-color: rgba(22, 90, 54, ${blockCountMap[uid] / 100}); 
-         border-radius: 50%;
-         filter: revert;
-        `;
+        el.firstElementChild.classList.add("calendar-day");
+        el.firstElementChild.setAttribute(
+          `data-level`,
+          `${Math.min(3, Math.floor(blockCountMap[uid] / 20))}`
+        );
       }
 
       el.firstElementChild.setAttribute("style", style);
