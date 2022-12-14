@@ -61,7 +61,7 @@ const roam = {
     return window.roamAlphaAPI.q(
       `
 [
-    :find (count ?e)
+    :find (count ?e) .
     :in $ [?tag1 ?tag2]
     :where
      [?e :block/refs ?ref1]
@@ -71,7 +71,7 @@ const roam = {
 ]
 `,
       [uid, dueUid]
-    ).length;
+    );
   },
 };
 
@@ -132,7 +132,7 @@ const onDateSelect = (el: HTMLElement) => {
         el.firstElementChild.classList.add("calendar-day");
         el.firstElementChild.setAttribute(
           `data-level`,
-          `${Math.min(3, Math.floor(blockCountMap[uid] / 20))}`
+          `${Math.min(4, Math.ceil(blockCountMap[uid] / 20))}`
         );
       }
 
