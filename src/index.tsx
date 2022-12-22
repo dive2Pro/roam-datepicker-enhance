@@ -16,7 +16,7 @@ const ancestorrule = `[
 
 const roam = {
   countBlocksOnPageByUid(uids: string[]) {
-    console.log(uids, " -----uids");
+    // console.log(uids, " -----uids");
     return window.roamAlphaAPI.data.fast.q(
       `
       [
@@ -77,7 +77,6 @@ const roam = {
 
 let observer: MutationObserver;
 const onDateSelect = (el: HTMLElement) => {
-  console.log(el, "--");
   const queryAllDate = async () => {
     const ariaLabels = [...el.querySelectorAll("[aria-label]")].reduce(
       (p, itemEl) => {
@@ -111,7 +110,7 @@ const onDateSelect = (el: HTMLElement) => {
         p[c[0]] = true;
         return p;
       }, {} as Record<string, boolean>);
-    console.log(" ----", linkedMap, blockCountMap);
+    // console.log(" ----", linkedMap, blockCountMap);
 
     Object.keys(ariaLabels).forEach((key) => {
       const { uid, el } = ariaLabels[key];
@@ -142,7 +141,7 @@ const onDateSelect = (el: HTMLElement) => {
     return ariaLabels;
   };
   observer = createDivObserver((mutationList) => {
-    console.log(mutationList, " --");
+    // console.log(mutationList, " --");
     if (mutationList.length > 20) queryAllDate();
   }, el);
   queryAllDate();
