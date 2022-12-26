@@ -24,7 +24,7 @@ const roam = {
         :in $ % [?uids ...]
         :where
           [?page :block/uid ?uids]
-          (ancestor ?child ?page)
+          [?child :block/page ?page]
       ]
     `,
       ancestorrule,
@@ -51,10 +51,16 @@ const roam = {
     const dueUid = window.roamAlphaAPI.q(`
       [ 
         :find ?e .
-        
         :where
-          [?page :node/title "due"]
+          [?page :node/title "${getTargetTitle()}"]
           [?page :block/uid ?e]]`);
+    const todoUid = window.roamAlphaAPI.q(`
+      [ 
+        :find ?e .
+        :where
+          [?page :node/title "TODO"]
+          [?page :block/uid ?e]]`);
+
     if (!dueUid) {
       return 0;
     }
@@ -62,15 +68,18 @@ const roam = {
       `
 [
     :find (count ?e) .
-    :in $ [?tag1 ?tag2]
+    :in $ [?tag1 ?tag2 ?todo]
     :where
      [?e :block/refs ?ref1]
      [?e :block/refs ?ref2]
      [?ref1 :block/uid ?tag1]
      [?ref2 :block/uid ?tag2]
+     [?p :block/children ?e]
+     [?p :block/refs ?pref1]
+     [?pref1 :block/uid ?todo]
 ]
 `,
-      [uid, dueUid]
+      [uid, dueUid, todoUid]
     );
   },
 };
@@ -154,8 +163,33 @@ const onDateDismiss = () => {
   observer.disconnect();
 };
 
+let API: RoamExtensionAPI;
+
+const panelSetup = () => {
+  API.settings.panel.create({
+    tabTitle: "Datepick enhancer",
+    settings: [
+      {
+        id: "due",
+        name: "Custom keyword",
+        description: 'specify a page title to replace the "due"',
+        action: {
+          type: "input",
+          placeholder: "due",
+        },
+      },
+    ],
+  });
+};
+
+const getTargetTitle = () => {
+  return API.settings.get("due") || 'due'
+}
+
 export default {
-  onload() {
+  onload({ extensionAPI }: { extensionAPI: RoamExtensionAPI }) {
+    API = extensionAPI;
+    panelSetup();
     document.arrive(".rm-jump-date-picker", onDateSelect);
     document.leave(".rm-jump-date-picker", onDateDismiss);
     extension_helper.on_uninstall(() => {
