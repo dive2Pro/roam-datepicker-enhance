@@ -9,6 +9,7 @@
     - A block has [[date of day]] and is preceded by the attribute "due::" or has the tag "#due " (You can change it in settings panel)
     - Under a `{{[[TODO]]}}` block
     - eg:
-      - 
+      - <img width="622" alt="image" src="https://user-images.githubusercontent.com/23192045/209608158-f3166598-685d-4dd7-9a58-16cabd067db5.png">
+
 
 
