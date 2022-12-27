@@ -6,8 +6,9 @@
 - the round border means that  the day was been linked.
 - the number in the corner indicates how much "due" to that day
   - What counts as "due"?
-    - A block has [[date of day]] and is preceded by the attribute "due::" or has the tag "#due "
-    - `due:: [[December 21st, 2022]]`
-    - `[[December 21st, 2022]] #due`
+    - A block has [[date of day]] and is preceded by the attribute "due::" or has the tag "#due " (You can change it in settings panel)
+    - Under a `{{[[TODO]]}}` block
+    - eg:
+      - 
 
 
