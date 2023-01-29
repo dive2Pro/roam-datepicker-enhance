@@ -13,6 +13,12 @@ const ancestorrule = `[
    [ (ancestor ?child ?a) 
         [?parent :block/children ?child ] 
         (ancestor ?parent ?a) ] ] ]`;
+const todoUid = window.roamAlphaAPI.q(`
+      [ 
+        :find ?e .
+        :where
+          [?page :node/title "TODO"]
+          [?page :block/uid ?e]]`);
 
 const roam = {
   countBlocksOnPageByUid(uids: string[]) {
@@ -47,20 +53,7 @@ const roam = {
       )
       .filter((item) => item[1]) as [string, { ":block/_refs": PullBlock[] }][];
   },
-  countTodoDueToDayByUid(uid: string) {
-    const dueUid = window.roamAlphaAPI.q(`
-      [ 
-        :find ?e .
-        :where
-          [?page :node/title "${getTargetTitle()}"]
-          [?page :block/uid ?e]]`);
-    const todoUid = window.roamAlphaAPI.q(`
-      [ 
-        :find ?e .
-        :where
-          [?page :node/title "TODO"]
-          [?page :block/uid ?e]]`);
-
+  countTodoDueToDayByUid(uid: string, dueUid: string) {
     if (!dueUid) {
       return 0;
     }
@@ -68,15 +61,15 @@ const roam = {
       `
 [
     :find (count ?e) .
-    :in $ [?tag1 ?tag2 ?todo]
+    :in $ [?uid ?due ?todo]
     :where
+     [?ref1 :block/uid ?uid]
+     [?ref2 :block/uid ?due]
      [?e :block/refs ?ref1]
      [?e :block/refs ?ref2]
-     [?ref1 :block/uid ?tag1]
-     [?ref2 :block/uid ?tag2]
      [?p :block/children ?e]
-     [?p :block/refs ?pref1]
      [?pref1 :block/uid ?todo]
+     [?p :block/refs ?pref1]
 ]
 `,
       [uid, dueUid, todoUid]
@@ -87,6 +80,8 @@ const roam = {
 let observer: MutationObserver;
 const onDateSelect = (el: HTMLElement) => {
   const queryAllDate = async () => {
+    console.log("@ --");
+
     const ariaLabels = [...el.querySelectorAll("[aria-label]")].reduce(
       (p, itemEl) => {
         const dayUid = dayjs(itemEl.getAttribute("aria-label")).format(
@@ -120,10 +115,16 @@ const onDateSelect = (el: HTMLElement) => {
         return p;
       }, {} as Record<string, boolean>);
     // console.log(" ----", linkedMap, blockCountMap);
-
+    console.time("123");
+    const dueUid = window.roamAlphaAPI.q(`
+      [ 
+        :find ?e .
+        :where
+          [?page :node/title "${getTargetTitle()}"]
+          [?page :block/uid ?e]]`) as unknown as string;
     Object.keys(ariaLabels).forEach((key) => {
       const { uid, el } = ariaLabels[key];
-      const count = roam.countTodoDueToDayByUid(uid);
+      const count = roam.countTodoDueToDayByUid(uid, dueUid);
       if (count) {
         el.firstElementChild.classList.add("due");
         el.firstElementChild.setAttribute("data-size", count + "");
@@ -146,11 +147,11 @@ const onDateSelect = (el: HTMLElement) => {
 
       el.firstElementChild.setAttribute("style", style);
     });
+    console.timeEnd("123");
 
     return ariaLabels;
   };
   observer = createDivObserver((mutationList) => {
-    // console.log(mutationList, " --");
     if (mutationList.length > 20) queryAllDate();
   }, el);
   queryAllDate();
@@ -183,8 +184,8 @@ const panelSetup = () => {
 };
 
 const getTargetTitle = () => {
-  return API.settings.get("due") || 'due'
-}
+  return API.settings.get("due") || "due";
+};
 
 export default {
   onload({ extensionAPI }: { extensionAPI: RoamExtensionAPI }) {
