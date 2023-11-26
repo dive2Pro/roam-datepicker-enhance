@@ -166,8 +166,8 @@ const panelSetup = () => {
     settings: [
       {
         id: "due",
-        name: "Custom keyword",
-        description: 'specify a page title to replace the "due"',
+        name: "Page title for due tasks",
+        description: 'A page which will represent a due task when mentioned beneath a TODO, or 0 to disable this functionality.',
         action: {
           type: "input",
           placeholder: "due",
