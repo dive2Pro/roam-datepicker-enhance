@@ -15,11 +15,11 @@ Each date is shaded according to how many blocks are present in its correspondin
 
 ## Mentions
 
-Draws an orange border when the date has been mentioned at least once.
+An orange border is drawn around any date which has been mentioned at least once.
 
 ## Tasks due (optional)
 
-An adjacent number indicating the number of tasks due for the date. A block is treated as a due task when it both:
+A small number next to each date indicates the number of tasks due. A block is considered a due task when it both:
 
 1. is a `{{[[TODO]]}}`
 1. has a child block which both:
