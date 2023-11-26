@@ -132,10 +132,6 @@ const onDateSelect = (el: HTMLElement) => {
       if (linkedMap[uid]) {
         el.firstElementChild.classList.add("outline");
       }
-      let style = linkedMap[uid]
-        ? `
-         `
-        : "";
 
       if (blockCountMap[uid] > 0) {
         el.firstElementChild.classList.add("calendar-day");
@@ -144,8 +140,6 @@ const onDateSelect = (el: HTMLElement) => {
           `${Math.min(4, Math.ceil(blockCountMap[uid] / 20))}`
         );
       }
-
-      el.firstElementChild.setAttribute("style", style);
     });
     console.timeEnd("123");
 
