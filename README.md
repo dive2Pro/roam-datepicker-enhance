@@ -21,10 +21,12 @@ Draws an orange border when the date has been mentioned at least once.
 
 An adjacent number indicating the number of tasks due for the date. A block is treated as a due task when it both:
 
-  1. is a `{{[[TODO]]}}`
-  1. has a child block which both:
-    1. has the attribute `due::` or the tag `#due`. (Set another page to be used in place of `due` in Datepick Enhancer's settings, or `0` to disable this functionality.)
-    1. mentions a [[date]]
+1. is a `{{[[TODO]]}}`
+1. has a child block which both:
+    1. begins with `due::` or has the tag `#due`
+    1. mentions a `[[Date]]`, e.g. `[[January 1st, 2024]]`
+  
+Set another page to be used in place of `due` in Datepick Enhancer's settings, or set to `0` to disable this functionality.
 
 ### Example of a due task
 
