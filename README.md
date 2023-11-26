@@ -2,7 +2,7 @@
 
 Datepick Enhancer allows Roam's date picker to convey additional information about each date:
 
-1. the [number of blocks](#number-of-blocks) present
+1. the number of [blocks present](#number-of-blocks)
 1. whether the date has been [mentioned](#mentions)
 1. the number of [tasks due](#tasks-due-optional)
 
