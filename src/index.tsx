@@ -132,10 +132,6 @@ const onDateSelect = (el: HTMLElement) => {
       if (linkedMap[uid]) {
         el.firstElementChild.classList.add("outline");
       }
-      let style = linkedMap[uid]
-        ? `
-         `
-        : "";
 
       if (blockCountMap[uid] > 0) {
         el.firstElementChild.classList.add("calendar-day");
@@ -144,8 +140,6 @@ const onDateSelect = (el: HTMLElement) => {
           `${Math.min(4, Math.ceil(blockCountMap[uid] / 20))}`
         );
       }
-
-      el.firstElementChild.setAttribute("style", style);
     });
     console.timeEnd("123");
 
@@ -172,8 +166,8 @@ const panelSetup = () => {
     settings: [
       {
         id: "due",
-        name: "Custom keyword",
-        description: 'specify a page title to replace the "due"',
+        name: "Page title for due tasks",
+        description: 'A page which will represent a due task when mentioned beneath a TODO, or 0 to disable this functionality.',
         action: {
           type: "input",
           placeholder: "due",
