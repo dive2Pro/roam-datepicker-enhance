@@ -23,7 +23,8 @@ const todoUid = window.roamAlphaAPI.q(`
 const roam = {
   countBlocksOnPageByUid(uids: string[]) {
     // console.log(uids, " -----uids");
-    return window.roamAlphaAPI.data.fast.q(
+    // @ts-ignore
+    return window.roamAlphaAPI.data.async.fast.q(
       `
       [
         :find ?uids (count ?child)
@@ -37,8 +38,11 @@ const roam = {
       uids
     ) as [string, number][];
   },
-  countLinksToPageByUid(uids: string[]) {
-    return window.roamAlphaAPI.data.fast
+  countLinksToPageByUid(
+    uids: string[]
+  ): Promise<[string, { ":block/_refs": PullBlock[] }][]> {
+    // @ts-ignore
+    return window.roamAlphaAPI.data.async.fast
       .q(
         `
       [
@@ -51,13 +55,18 @@ const roam = {
         ancestorrule,
         uids
       )
-      .filter((item) => item[1]) as [string, { ":block/_refs": PullBlock[] }][];
+      .then((res: any) => {
+        return res.filter(
+          (item: [string, { ":block/_refs": PullBlock[] }]) => item[1]
+        );
+      });
   },
-  countTodoDueToDayByUid(uid: string, dueUid: string) {
+  async countTodoDueToDayByUid(uid: string, dueUid: string) {
     if (!dueUid) {
       return 0;
     }
-    return window.roamAlphaAPI.q(
+    // @ts-ignore
+    return window.roamAlphaAPI.data.async.fast.q(
       `
 [
     :find (count ?e) .
@@ -101,19 +110,20 @@ const onDateSelect = (el: HTMLElement) => {
     );
     await delay();
     console.time("1");
-    const blockCountMap = roam
-      .countBlocksOnPageByUid(Object.keys(ariaLabels))
-      .reduce((p, c) => {
-        p[c[0]] = c[1];
-        return p;
-      }, {} as Record<string, number>);
+    const allBlocks = await roam.countBlocksOnPageByUid(
+      Object.keys(ariaLabels)
+    );
+    console.log({ allBlocks });
+    const blockCountMap = allBlocks.reduce((p, c) => {
+      p[c[0]] = c[1];
+      return p;
+    }, {} as Record<string, number>);
     console.timeEnd("1");
-    const linkedMap = roam
-      .countLinksToPageByUid(Object.keys(ariaLabels))
-      .reduce((p, c) => {
-        p[c[0]] = true;
-        return p;
-      }, {} as Record<string, boolean>);
+    const allLinks = await roam.countLinksToPageByUid(Object.keys(ariaLabels));
+    const linkedMap = allLinks.reduce((p, c) => {
+      p[c[0]] = true;
+      return p;
+    }, {} as Record<string, boolean>);
     // console.log(" ----", linkedMap, blockCountMap);
     console.time("123");
     const dueUid = window.roamAlphaAPI.q(`
@@ -122,9 +132,9 @@ const onDateSelect = (el: HTMLElement) => {
         :where
           [?page :node/title "${getTargetTitle()}"]
           [?page :block/uid ?e]]`) as unknown as string;
-    Object.keys(ariaLabels).forEach((key) => {
+    Object.keys(ariaLabels).forEach(async (key) => {
       const { uid, el } = ariaLabels[key];
-      const count = roam.countTodoDueToDayByUid(uid, dueUid);
+      const count = await roam.countTodoDueToDayByUid(uid, dueUid);
       if (count) {
         el.firstElementChild.classList.add("due");
         el.firstElementChild.setAttribute("data-size", count + "");
@@ -167,7 +177,8 @@ const panelSetup = () => {
       {
         id: "due",
         name: "Page title for due tasks",
-        description: 'A page which will represent a due task when mentioned beneath a TODO, or 0 to disable this functionality.',
+        description:
+          "A page which will represent a due task when mentioned beneath a TODO, or 0 to disable this functionality.",
         action: {
           type: "input",
           placeholder: "due",
